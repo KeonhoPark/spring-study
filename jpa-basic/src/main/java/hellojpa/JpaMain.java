@@ -17,14 +17,12 @@ public class JpaMain {
         tx.begin();
 
         try {
-            Member member = new Member();
-            member.setName("park");
-            member.setId(2L);
+            Member member = new Member(11L, "member11");
             em.persist(member);
 
-            Member findMember = em.find(Member.class, 1L);
-            List<Member> resultList = em.createQuery("select m from Member as m", Member.class)
-                    .getResultList();
+            em.flush();
+
+            System.out.println("====commit query====");
 
 
 
