@@ -17,12 +17,6 @@ public class JpaMain {
         tx.begin();
 
         try {
-            Member findMember = em.find(Member.class, 11L);
-
-            System.out.println("findMember.getName() = " + findMember.getName());
-            em.detach(findMember);
-            findMember.setName("user11");
-
 
             tx.commit();
         } catch (Exception e) {
