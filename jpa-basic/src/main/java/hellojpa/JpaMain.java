@@ -17,13 +17,11 @@ public class JpaMain {
         tx.begin();
 
         try {
-            Member member = new Member(11L, "member11");
-            em.persist(member);
+            Member findMember = em.find(Member.class, 11L);
 
-            em.flush();
-
-            System.out.println("====commit query====");
-
+            System.out.println("findMember.getName() = " + findMember.getName());
+            em.detach(findMember);
+            findMember.setName("user11");
 
 
             tx.commit();
