@@ -18,6 +18,18 @@ public class JpaMain {
 
         try {
 
+            Team team = new Team();
+            team.setName("TeamA");
+            em.persist(team);
+
+            Member member = new Member();
+            member.setUsername("memberA");
+            member.setTeam(team);
+            em.persist(member);
+
+            Team findTeam = member.getTeam();
+            System.out.println("findTeam = " + findTeam.getName());
+
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
