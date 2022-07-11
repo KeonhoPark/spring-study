@@ -1,11 +1,12 @@
 package hellojpa;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @SequenceGenerator(name = "member_seq_generator",
         sequenceName = "MEMBER_SEQ")
-public class Member {
+public class Member extends BaseEntity{
 
     @Id
     @GeneratedValue
@@ -39,7 +40,8 @@ public class Member {
         return team;
     }
 
-    public void setTeam(Team team) {
+    public void changeTeam(Team team) {
         this.team = team;
+        team.getMembers().add(this);
     }
 }
