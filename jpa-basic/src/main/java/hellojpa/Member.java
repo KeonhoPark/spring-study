@@ -20,6 +20,14 @@ public class Member extends BaseEntity{
     @JoinColumn(name = "TEAM_ID")
     private Team team;
 
+    //기간
+    @Embedded
+    private Period workPeriod;
+
+    //주소
+    @Embedded
+    private Address homeAddress;
+
     public Long getId() {
         return id;
     }
