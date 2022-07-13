@@ -1,6 +1,8 @@
 package jpql;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class JpaMain {
@@ -15,22 +17,30 @@ public class JpaMain {
 
         try {
 
-            for (int i = 0 ; i < 100; i++){
-                Member member = new Member();
-                member.setAge(i);
-                member.setUserName("member" + i);
-                em.persist(member);
-            }
+            Team team = new Team();
+            team.setName("teamA");
+            em.persist(team);
 
-            List<Member> resultList = em.createQuery("select m from Member m order by m.age desc ", Member.class)
-                    .setFirstResult(1)
-                    .setMaxResults(10)
+            Member member1 = new Member();
+            member1.setAge(10);
+            member1.setUserName("member1");
+            member1.setTeam(team);
+            em.persist(member1);
+
+            Member member2 = new Member();
+            member2.setAge(10);
+            member2.setUserName("member2");
+            member2.setTeam(team);
+            em.persist(member2);
+
+            String query = "select m.userName from Team t join t.members m";
+            List<String> resultList = em.createQuery(query, String.class)
                     .getResultList();
 
-            System.out.println("resultList.size() = " + resultList.size());
-            for (Member m : resultList) {
-                System.out.println("m.toString() = " + m.toString());
+            for (String s : resultList) {
+                System.out.println("s = " + s);
             }
+
 
             tx.commit();
         } catch (Exception e) {
