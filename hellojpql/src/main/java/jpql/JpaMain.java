@@ -17,28 +17,45 @@ public class JpaMain {
 
         try {
 
-            Team team = new Team();
-            team.setName("teamA");
-            em.persist(team);
+            Team teamA = new Team();
+            teamA.setName("teamA");
+            em.persist(teamA);
+
+            Team teamB = new Team();
+            teamB.setName("teamB");
+            em.persist(teamB);
 
             Member member1 = new Member();
             member1.setAge(10);
             member1.setUserName("member1");
-            member1.setTeam(team);
+            member1.setTeam(teamA);
             em.persist(member1);
 
             Member member2 = new Member();
             member2.setAge(10);
             member2.setUserName("member2");
-            member2.setTeam(team);
+            member2.setTeam(teamA);
             em.persist(member2);
 
-            String query = "select m.userName from Team t join t.members m";
-            List<String> resultList = em.createQuery(query, String.class)
-                    .getResultList();
+            Member member3 = new Member();
+            member3.setAge(10);
+            member3.setUserName("member3");
+            member3.setTeam(teamB);
+            em.persist(member3);
 
-            for (String s : resultList) {
-                System.out.println("s = " + s);
+            em.flush();
+            em.clear();
+
+            String query = "select t from Team t join fetch t.members m";
+            List<Team> resultList = em.createQuery(query, Team.class)
+                    .getResultList();
+            System.out.println("resultList.size() = " + resultList.size());
+
+            for (Team team : resultList) {
+                System.out.println("team = " + team.getName() + " , memberCount = " + team.getMembers().size());
+                for (Member member : team.getMembers()) {
+                    System.out.println("member = " + member);
+                }
             }
 
 
