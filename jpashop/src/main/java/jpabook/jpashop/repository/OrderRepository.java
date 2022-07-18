@@ -17,11 +17,12 @@ import java.util.List;
 public class OrderRepository {
 
     private final EntityManager em;
-    public void save(Order order){
+
+    public void save(Order order) {
         em.persist(order);
     }
 
-    public Order findOne(Long id){
+    public Order findOne(Long id) {
         return em.find(Order.class, id);
     }
 
@@ -93,14 +94,24 @@ public class OrderRepository {
         return query.getResultList();
     }
 
-    public List<Order> findAllWithMemberDelivery(){
+    public List<Order> findAllWithMemberDelivery() {
         List<Order> resultList = em.createQuery("select o from Order o " +
-                "join fetch o.member m" +
-                " join fetch o.delivery d", Order.class)
+                        "join fetch o.member m" +
+                        " join fetch o.delivery d", Order.class)
                 .getResultList();
 
         return resultList;
     }
 
 
+    public List<OrderSimpleQueryDto> findOrderDtos() {
+
+        List<OrderSimpleQueryDto> result = em.createQuery("select new jpabook.jpashop.repository.OrderSimpleQueryDto(o.id, m.name, o.orderDate, o.status, d.address)" +
+                        "from Order o join o.member m join o.delivery d", OrderSimpleQueryDto.class)
+                        .getResultList();
+
+        return result;
+
+
+    }
 }
