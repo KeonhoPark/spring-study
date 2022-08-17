@@ -14,6 +14,8 @@ import study.datajpa.dto.MemberDto;
 import study.datajpa.entity.Member;
 import study.datajpa.entity.Team;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +33,9 @@ class MemberRepositoryTest {
 
     @Autowired
     TeamRepository teamRepository;
+
+    @PersistenceContext
+    EntityManager em;
 
     @Test
     public void testMember() {
@@ -210,6 +215,30 @@ class MemberRepositoryTest {
         assertThat(page.getTotalPages()).isEqualTo(2);
         assertThat(page.isFirst()).isTrue();
         assertThat(page.hasNext()).isTrue();
+    }
+
+    @Test
+    public void bulkUpdate() {
+        memberRepository.save(new Member("member1", 10));
+        memberRepository.save(new Member("member2", 15));
+        memberRepository.save(new Member("member3", 20));
+        memberRepository.save(new Member("member4", 25));
+        memberRepository.save(new Member("member5", 30));
+
+        int resultCount = memberRepository.bulkAgePlus(20);
+
+        //벌크연산시에는 영속성 컨텍스트와 상관없이 바로 DB에 업데이트 사항이 반영되기 때문에
+        //엔티티 메니저의 1차캐시를 의도적으로 비워줘야 db에 업데이트된 사항을 가져올 수 있다.
+        //MemberRepository에서 autoclear 옵션으로 대체
+        /*em.flush();
+        em.clear();*/
+
+        List<Member> result = memberRepository.findByUsername("member5");
+        Member findMember = result.get(0);
+
+        System.out.println("findMember.getAge() = " + findMember.getAge());
+
+        assertThat(resultCount).isEqualTo(3);
     }
 
 
