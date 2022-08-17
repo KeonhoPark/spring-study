@@ -229,7 +229,7 @@ class MemberRepositoryTest {
 
         //벌크연산시에는 영속성 컨텍스트와 상관없이 바로 DB에 업데이트 사항이 반영되기 때문에
         //엔티티 메니저의 1차캐시를 의도적으로 비워줘야 db에 업데이트된 사항을 가져올 수 있다.
-        //MemberRepository에서 autoclear 옵션으로 대체
+        //MemberRepository에서 autoclear 옵션으로 대리
         /*em.flush();
         em.clear();*/
 
@@ -239,6 +239,33 @@ class MemberRepositoryTest {
         System.out.println("findMember.getAge() = " + findMember.getAge());
 
         assertThat(resultCount).isEqualTo(3);
+    }
+
+    @Test
+    public void findMemberLazy() {
+
+        Team teamA = new Team("teamA");
+        Team teamB = new Team("teamB");
+        teamRepository.save(teamA);
+        teamRepository.save(teamB);
+
+        Member member1 = new Member("member1", 10, teamA);
+        Member member2 = new Member("member2", 20, teamB);
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+
+        em.flush();
+        em.clear();
+
+        //when
+        List<Member> members = memberRepository.findEntityGraphByUsername("member1");
+
+        for (Member member : members) {
+            System.out.println("member = " + member.getUsername());
+            System.out.println("member.getTeam().getName() = " + member.getTeam().getName());
+        }
+
+
     }
 
 
