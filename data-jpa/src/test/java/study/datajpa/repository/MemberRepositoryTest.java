@@ -158,6 +158,26 @@ class MemberRepositoryTest {
         }
     }
 
+    @Test
+    public void returnType() {
+        Member m1 = new Member("aa", 10);
+        Member m2 = new Member("bb", 20);
+        memberRepository.save(m1);
+        memberRepository.save(m2);
+
+        //빈 리스트 반환
+        List<Member> result = memberRepository.findListByUsername("asdfasdf");
+        System.out.println("result = " + result);
+
+        //null 반환(스프링 데이터 JPA가 NoResultException 예외를 처리 후 null 반환)
+        Member findMember = memberRepository.findMemberByUsername("asdfasdf");
+        System.out.println("findMember = " + findMember);
+
+        //optional.empty 반환
+        Optional<Member> optionalMember = memberRepository.findOptionalByUsername("asdfasdf");
+        System.out.println("optionalMember = " + optionalMember);
+    }
+
 
 
 }
