@@ -642,4 +642,41 @@ public class QuerydslBasicTest {
         }
     }
 
+    @Test
+    public void bulkUpdate() {
+        long count = query
+                .update(member)
+                .set(member.username, "비회원")
+                .where(member.age.lt(28))
+                .execute();
+
+        //벌크연산에서는 필수
+        em.flush();
+        em.clear();
+
+        List<Member> result = query
+                .selectFrom(member)
+                .fetch();
+
+        for (Member member1 : result) {
+            System.out.println("member1 = " + member1);
+        }
+    }
+
+    @Test
+    public void bulkAdd() {
+        long count = query
+                .update(member)
+                .set(member.age, member.age.add(1))
+                .execute();
+    }
+
+    @Test
+    public void bulkDelete() {
+        query
+                .delete(member)
+                .where(member.age.gt(18))
+                .execute();
+    }
+
 }
