@@ -15,7 +15,7 @@ import java.util.NoSuchElementException;
  * DataSourceUrils.releaseConnection() 함수를 사용하여 커넥션 반환
  */
 @Slf4j
-public class MemberRepositoryV3 {
+public class MemberRepositoryV3{
 
     private final DataSource dataSource;
 
